@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/GosWoj/helsinki-phonebook-backend/issues"
   },
-  "homepage": "https://github.com/GosWoj/helsinki-phonebook-backend#readme"
+  "homepage": "https://github.com/GosWoj/helsinki-phonebook-backend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
