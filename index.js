@@ -25,8 +25,12 @@ let persons = [
   },
 ];
 
+morgan.token("person", function getPerson(req) {
+  return JSON.stringify(req.person);
+});
+
 app.use(express.json());
-app.use(morgan("tiny"));
+app.use(morgan(":method :url :status :response-time :person"));
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
@@ -75,6 +79,7 @@ app.post("/api/persons", (request, response) => {
   };
 
   persons = persons.concat(person);
+  request.person = person;
   response.json(person);
 });
 
