@@ -33,6 +33,7 @@ morgan.token("person", function getPerson(req) {
 app.use(express.json());
 app.use(morgan(":method :url :status :response-time :person"));
 app.use(cors());
+app.use(express.static("build"));
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
