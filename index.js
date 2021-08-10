@@ -3,7 +3,6 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const Person = require("./models/person");
-const { json } = require("express");
 const app = express();
 
 let persons = [
@@ -64,7 +63,6 @@ app.delete("/api/persons/:id", (request, response) => {
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-  const newID = Math.floor(Math.random() * 99999);
 
   if (!body.name || !body.number) {
     return response.status(400).json({
@@ -72,23 +70,14 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const sameName = persons.find((person) => person.name === body.name);
-
-  if (sameName) {
-    return response.status(400).json({
-      error: "Name must be unique",
-    });
-  }
-
-  const person = {
-    id: newID,
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  persons = persons.concat(person);
-  request.person = person;
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
 app.get("/info", (request, response) => {
