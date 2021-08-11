@@ -64,7 +64,7 @@ app.post("/api/persons", (request, response, next) => {
     .then((savedPerson) => {
       response.json(savedPerson);
     })
-    .catch((error) => next(errro));
+    .catch((error) => next(error));
 });
 
 app.get("/info", (request, response) => {
@@ -76,6 +76,14 @@ app.get("/info", (request, response) => {
     </div> `
   );
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({
+    error: "Unknown endpoint",
+  });
+};
+
+app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
   console.log(error.message);
