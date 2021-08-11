@@ -24,15 +24,16 @@ app.get("/api/persons", (request, response, next) => {
     });
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((p) => p.id === id);
-
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
+app.get("/api/persons/:id", (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
@@ -82,14 +83,19 @@ app.post("/api/persons", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
   const date = new Date();
-  response.send(
-    `<div>
-        <h2>Phonebook has info for ${persons.length} people</h2>
-        <h3>${date}</h3>
-    </div> `
-  );
+
+  Person.find({})
+    .then((result) => {
+      response.send(
+        `<div>
+            <h2>Phonebook has info for ${result.length} people</h2>
+            <h3>${date}</h3>
+          </div> `
+      );
+    })
+    .catch((error) => next(error));
 });
 
 const unknownEndpoint = (request, response) => {
